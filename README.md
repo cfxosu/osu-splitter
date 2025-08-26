@@ -14,15 +14,7 @@ A powerful Windows application that allows you to split osu! beatmaps into multi
 - **Custom UI Design**: Modern dark theme with rounded corners, smooth animations, and SF Pro fonts
 - **Memory Reading**: Uses structured memory reading for reliable data extraction
 
-## 📸 Screenshots
-
-*To add more screenshots:*
-1. Take screenshots of your application
-2. Save them as PNG files in the `screenshots/` directory
-3. Add image references like: `![Description](screenshots/your-image.png)`
-4. Commit and push to GitHub
-
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
