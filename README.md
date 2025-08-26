@@ -171,7 +171,7 @@ The application uses a sophisticated memory reading system that:
 
 ## 📄 License
 
-This project is open source. Feel free to use, modify, and distribute according to your needs.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
