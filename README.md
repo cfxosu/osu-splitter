@@ -120,56 +120,7 @@ The application uses a sophisticated memory reading system that:
 - **Understand beatmap flow** and transitions
 - **Build confidence** before attempting full plays
 
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**"Beatmap file not found"**
-- Make sure osu! is running
-- Select a beatmap in osu! song selection
-- Wait a moment for the application to detect the beatmap
-
-**"Unable to read beatmap data"**
-- Ensure you're running the correct architecture (x64/x86)
-- Try restarting both osu! and the splitter application
-- Check if osu! is running as administrator
-
-**"Memory reading failed"**
-- The application may need to be run as administrator
-- Some antivirus software may block memory reading
-- Try running in compatibility mode
-
-### Performance Tips
-- **Close other memory-intensive applications**
-- **Run on SSD** for faster file operations
-- **Keep osu! focused** during splitting operations
-
-## 🤝 Contributing
-
-### Development Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/cfxosu/osu-splitter.git
-   cd osu-splitter
-   ```
-
-2. **Open in Visual Studio**
-   - Open `osu-splitter.sln`
-   - Restore NuGet packages
-   - Build the solution
-
-3. **Run the application**
-   - Set `src` as startup project
-   - Build and run with osu! open
-
-### Code Guidelines
-- Follow C# coding standards
-- Use meaningful variable names
-- Add comments for complex logic
-- Test with multiple beatmaps before submitting changes
-
-## 📄 License
+## � License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
@@ -181,12 +132,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   - Used for memory reading and process management functionality
 
 ### Community & Resources
+- **osu-trainer** for inspiration
 - **osu! community** for inspiration and testing
 - **Memory reading libraries** for enabling real-time data access
 - **SF Pro fonts** for the beautiful UI typography
-
----
-
-**Made with ❤️ for the osu! community**
-
-*Split. Practice. Improve. Repeat.*
