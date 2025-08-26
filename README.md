@@ -1,5 +1,7 @@
 # osu! Beatmap Splitter
 
+![osu! Beatmap Splitter](screenshots/osu-splitter.png)
+
 A powerful Windows application that allows you to split osu! beatmaps into multiple parts for practice purposes. The application reads beatmap data directly from osu! memory while the game is running, making it incredibly responsive and accurate.
 
 ## ✨ Features
@@ -11,6 +13,10 @@ A powerful Windows application that allows you to split osu! beatmaps into multi
 - **.osz Archive Creation**: Creates importable beatmap archives for osu!
 - **Custom UI Design**: Modern dark theme with rounded corners, smooth animations, and SF Pro fonts
 - **Memory Reading**: Uses structured memory reading for reliable data extraction
+
+## 📸 Screenshots
+
+*Additional screenshots can be added to the `screenshots/` directory and referenced in this README.*
 
 ## 🚀 Quick Start
 
