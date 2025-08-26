@@ -173,8 +173,14 @@ The application uses a sophisticated memory reading system that:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## 🙏 Acknowledgments & Credits
 
+### Core Dependencies
+- **ProcessMemoryDataFinder** - Memory scanning and process utilities
+  - Repository: https://github.com/Piotrekol/ProcessMemoryDataFinder
+  - Used for memory reading and process management functionality
+
+### Community & Resources
 - **osu! community** for inspiration and testing
 - **Memory reading libraries** for enabling real-time data access
 - **SF Pro fonts** for the beautiful UI typography
