@@ -103,27 +103,6 @@ The application uses a sophisticated memory reading system that:
 - Handles different osu! versions automatically
 - Provides real-time beatmap information
 
-## 🎯 Use Cases
-
-### Practice Sessions
-- **Break down difficult sections** into manageable parts
-- **Focus on specific patterns** or timing sections
-- **Progressive difficulty** - start with easier parts and work up
-
-### Speed Training
-- **Practice at different speeds** on different sections
-- **Focus on accuracy** in challenging parts
-- **Build muscle memory** section by section
-
-### Learning New Maps
-- **Master complex rhythms** one part at a time
-- **Understand beatmap flow** and transitions
-- **Build confidence** before attempting full plays
-
-## � License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments & Credits
 
 ### Core Dependencies
