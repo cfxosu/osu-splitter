@@ -6,7 +6,7 @@ A program that allows you to split osu! beatmaps into multiple parts for practic
 
 ## Download
 
-https://github.com/cfxosu/osu-splitter
+https://github.com/cfxosu/osu-splitter/releases/tag/osu-splitter-1.0
 
 ## Additional Notes
 
@@ -16,7 +16,5 @@ The application reads beatmap data directly from osu! memory while the game is r
 
 This project uses the following projects:
 
-- [ProcessMemoryDataFinder](https://github.com/Piotrekol/ProcessMemoryDataFinder/tree/master) — licensed under [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.en.html)
-- [OsuMemoryDataProvider](OsuMemoryDataProvider/) — custom implementation (included)
-- [SF Pro Display fonts](assets/) — included in `assets/`
+- [ProcessMemoryDataFinder](https://github.com/Piotrekol/ProcessMemoryDataFinder/tree/master) — 
 - [GDI+ (built into .NET Framework)](https://learn.microsoft.com/en-us/windows/win32/gdiplus/) (built into Windows/.NET)
