@@ -17,6 +17,22 @@ namespace StructuredOsuMemoryProviderTester
             if (disposing && (components != null))
             {
                 components.Dispose();
+                // dispose loaded application icon if present
+                try
+                {
+                    // _appIcon is declared in the other partial class file
+                    var field = this.GetType().GetField("_appIcon", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    if (field != null)
+                    {
+                        var icon = field.GetValue(this) as System.Drawing.Icon;
+                        icon?.Dispose();
+                        field.SetValue(this, null);
+                    }
+                }
+                catch
+                {
+                    // ignore errors during dispose
+                }
             }
             base.Dispose(disposing);
         }
@@ -230,7 +246,8 @@ namespace StructuredOsuMemoryProviderTester
             this.Controls.Add(this.button_SplitBeatmapBottom);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
-            this.Text = "";
+            // Base window title
+            this.Text = "osu-splitter";
             this.BackColor = System.Drawing.Color.FromArgb(28, 28, 30);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);

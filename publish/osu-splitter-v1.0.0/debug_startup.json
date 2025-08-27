@@ -1,0 +1,8 @@
+{
+  "BaseDirectory": "C:\\Users\\cfx\\Downloads\\osu-splitter\\publish\\win-x64\\",
+  "EntryAssembly": "C:\\Users\\cfx\\Downloads\\osu-splitter\\publish\\win-x64\\osu-splitter.dll",
+  "Is64": true,
+  "LogoExists": true,
+  "CanRead": false,
+  "OsuWindowHint": null
+}

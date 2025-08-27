@@ -16,7 +16,7 @@ The application reads beatmap data directly from osu! memory while the game is r
 
 This project uses the following projects:
 
-ProcessMemoryDataFinder, licensed under GPL-3.0
-OsuMemoryDataProvider (custom implementation)
-SF Pro Display fonts
-GDI+ (built into .NET Framework)
+- [ProcessMemoryDataFinder](https://github.com/Piotrekol/ProcessMemoryDataFinder/tree/master) — licensed under [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.en.html)
+- [OsuMemoryDataProvider](OsuMemoryDataProvider/) — custom implementation (included)
+- [SF Pro Display fonts](assets/) — included in `assets/`
+- [GDI+ (built into .NET Framework)](https://learn.microsoft.com/en-us/windows/win32/gdiplus/) (built into Windows/.NET)

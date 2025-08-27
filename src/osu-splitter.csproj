@@ -49,4 +49,35 @@
     <ProjectReference Include="..\OsuMemoryDataProvider\OsuMemoryDataProvider.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Content Include="..\assets\logo.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+		<ItemGroup>
+			<!-- Copy entire assets folder (fonts) so published EXE can draw overlay text -->
+			<Content Include="..\assets\**\*">
+				<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+				<Link>assets\%(RecursiveDir)%(Filename)%(Extension)</Link>
+			</Content>
+		</ItemGroup>
+
+	<!-- Generate ICO from logo.png before build and embed as application icon -->
+	<PropertyGroup>
+		<!-- ApplicationIcon points to the generated ICO in repository assets folder -->
+		<ApplicationIcon>..\assets\logo.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<Target Name="GenerateIco" BeforeTargets="BeforeBuild">
+		<!-- Run the MakeIco tool to produce assets\logo.ico -->
+		<Exec Command="dotnet run --project $(MSBuildThisFileDirectory)..\tools\MakeIco\MakeIco.csproj --framework net8.0-windows" WorkingDirectory="$(MSBuildThisFileDirectory)" />
+		<!-- Add generated icon as content so it is available during publish -->
+		<ItemGroup>
+			<Content Include="..\assets\logo.ico">
+				<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			</Content>
+		</ItemGroup>
+	</Target>
+
 </Project>

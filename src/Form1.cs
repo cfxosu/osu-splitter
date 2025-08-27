@@ -21,6 +21,7 @@ namespace StructuredOsuMemoryProviderTester
 
     public partial class Form1 : Form
     {
+    private System.Drawing.Icon _appIcon;
         private readonly string _osuWindowTitleHint;
         private int _readDelay = 33;
 
@@ -30,7 +31,52 @@ namespace StructuredOsuMemoryProviderTester
         public Form1(string osuWindowTitleHint)
         {
             InitializeComponent();
+            // Load application icon from assets/logo.png (PNG) and convert to Icon
+            try
+            {
+                var exeDir = AppDomain.CurrentDomain.BaseDirectory;
+                var logoPath = Path.GetFullPath(Path.Combine(exeDir, "..\\..\\..\\assets\\logo.png"));
+                if (!File.Exists(logoPath))
+                {
+                    // fallback to looking relative to the project output
+                    logoPath = Path.Combine(exeDir, "logo.png");
+                }
+
+                if (File.Exists(logoPath))
+                {
+                    using var bmp = new Bitmap(logoPath);
+                    // Convert PNG to icon by creating an Icon from HICON
+                    var hIcon = bmp.GetHicon();
+                    _appIcon = System.Drawing.Icon.FromHandle(hIcon);
+                    this.Icon = _appIcon;
+                }
+            }
+            catch
+            {
+                // ignore icon load failures; app will use default icon
+            }
             _sreader = StructuredOsuMemoryReader.GetInstance(new("osu!", osuWindowTitleHint));
+
+            // Write a tiny startup debug file so we can see what the published EXE environment looks like
+            try
+            {
+                var startInfo = new
+                {
+                    BaseDirectory = AppDomain.CurrentDomain.BaseDirectory,
+                    EntryAssembly = System.Reflection.Assembly.GetEntryAssembly()?.Location,
+                    Is64 = Environment.Is64BitProcess,
+                    LogoExists = File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logo.png")),
+                    CanRead = _sreader?.CanRead ?? false,
+                    OsuWindowHint = osuWindowTitleHint
+                };
+
+                var startLog = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "debug_startup.json");
+                File.WriteAllText(startLog, JsonConvert.SerializeObject(startInfo, Formatting.Indented));
+            }
+            catch
+            {
+                // ignore
+            }
             Shown += OnShown;
             Closing += OnClosing;
 
@@ -100,6 +146,17 @@ namespace StructuredOsuMemoryProviderTester
                         {
                             // Backend continues to extract beatmap information silently
                             var backendInfo = ExtractBackendBeatmapInfo(baseAddresses.Beatmap);
+
+                            // write a small debug file next to the exe so we can inspect what the published build sees
+                            try
+                            {
+                                var logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "debug_beatmap.json");
+                                File.WriteAllText(logPath, JsonConvert.SerializeObject(backendInfo, Formatting.Indented));
+                            }
+                            catch
+                            {
+                                // ignore logging failures
+                            }
 
                             // Auto-update beatmap path when memory data changes
                             UpdateBeatmapPathFromMemory(baseAddresses);
@@ -839,7 +896,7 @@ namespace StructuredOsuMemoryProviderTester
                 // Calculate scaling to fit the entire image within the target dimensions while maintaining aspect ratio
                 float scaleX = (float)targetWidth / originalImage.Width;
                 float scaleY = (float)targetHeight / originalImage.Height;
-                float scale = Math.Min(scaleX, scaleY);
+                float scale = System.Math.Min(scaleX, scaleY);
 
                 // Calculate the scaled dimensions
                 int scaledWidth = (int)(originalImage.Width * scale);
@@ -1279,41 +1336,23 @@ namespace StructuredOsuMemoryProviderTester
 
                 successMessage += $"\nFiles created:\n{string.Join("\n", createdFiles)}";
 
-                // Ask user if they want to create .osz file
-                DialogResult result = MessageBox.Show(
-                    successMessage + "\n\nWould you like to create a .osz file and import it into osu!?",
-                    "Success - Create .osz?",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
-
-                if (result == DialogResult.Yes)
+                // Automatically create a .osz archive from the beatmap folder and open it (imports into osu!)
+                try
                 {
-                    try
+                    string oszPath = CreateOsuBeatmapArchive(directory);
+                    if (!string.IsNullOrEmpty(oszPath))
                     {
-                        // Create .osz file and import into osu!
-                        string oszPath = CreateOsuBeatmapArchive(directory, createdFiles[0]);
-                        if (!string.IsNullOrEmpty(oszPath))
+                        Process.Start(new ProcessStartInfo
                         {
-                            // Open the .osz file to import into osu!
-                            Process.Start(new ProcessStartInfo
-                            {
-                                FileName = oszPath,
-                                UseShellExecute = true
-                            });
-
-                            // Silent operation - no debug logging
-                            MessageBox.Show("Beatmap archive created and opened!\n\nosu! should automatically detect and import the new beatmap set with all split difficulties.", "Import Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error creating .osz file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            FileName = oszPath,
+                            UseShellExecute = true
+                        });
+                        // Silent success - no message box shown to the user
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show(successMessage, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Error creating .osz file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 // Refresh beatmap info
@@ -1475,57 +1514,29 @@ namespace StructuredOsuMemoryProviderTester
             }
         }
 
-        private string CreateOsuBeatmapArchive(string beatmapDirectory, string sampleFileName)
+        private string CreateOsuBeatmapArchive(string beatmapDirectory)
         {
             try
             {
-                // Get the base name without the part suffix for the archive
-                string baseFileName = sampleFileName;
-                if (baseFileName.Contains(" Part "))
-                {
-                    int partIndex = baseFileName.IndexOf(" Part ");
-                    baseFileName = baseFileName.Substring(0, partIndex);
-                }
+                if (string.IsNullOrEmpty(beatmapDirectory) || !Directory.Exists(beatmapDirectory))
+                    throw new Exception("Beatmap directory not found.");
 
-                // Create archive name
-                string archiveName = $"{baseFileName} (Split Practice)";
-                string tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-                string archiveDir = Path.Combine(tempDir, archiveName);
-                string zipPath = Path.Combine(beatmapDirectory, $"{archiveName}.zip");
-                string oszPath = Path.Combine(beatmapDirectory, $"{archiveName}.osz");
+                // Use the beatmap folder name for the archive
+                string parent = Path.GetDirectoryName(beatmapDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+                string folderName = Path.GetFileName(beatmapDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
 
-                // Create temporary directory structure
-                Directory.CreateDirectory(archiveDir);
+                string zipPath = Path.Combine(parent, folderName + ".zip");
+                string oszPath = Path.Combine(parent, folderName + ".osz");
 
-                // Copy all non-.osu files from the beatmap directory to the archive directory
-                foreach (string file in Directory.GetFiles(beatmapDirectory))
-                {
-                    string fileName = Path.GetFileName(file);
-                    // Skip .osu files and .osz files
-                    if (!fileName.EndsWith(".osu", StringComparison.OrdinalIgnoreCase) &&
-                        !fileName.EndsWith(".osz", StringComparison.OrdinalIgnoreCase))
-                    {
-                        string destPath = Path.Combine(archiveDir, fileName);
-                        File.Copy(file, destPath, true); // Overwrite if exists
-                    }
-                }
+                // If existing zip/osz exist, overwrite
+                if (File.Exists(zipPath)) File.Delete(zipPath);
+                if (File.Exists(oszPath)) File.Delete(oszPath);
 
-                // Copy all split beatmap files (they all have "Part" in the name)
-                foreach (string file in Directory.GetFiles(beatmapDirectory, "*Part*.osu"))
-                {
-                    string fileName = Path.GetFileName(file);
-                    string destPath = Path.Combine(archiveDir, fileName);
-                    File.Copy(file, destPath, true); // Overwrite if exists
-                }
-
-                // Create the zip file
-                ZipFile.CreateFromDirectory(archiveDir, zipPath);
+                // Create zip from the entire beatmap folder
+                ZipFile.CreateFromDirectory(beatmapDirectory, zipPath, CompressionLevel.Optimal, false);
 
                 // Rename to .osz
                 File.Move(zipPath, oszPath);
-
-                // Clean up temporary directory
-                Directory.Delete(tempDir, true);
 
                 return oszPath;
             }
