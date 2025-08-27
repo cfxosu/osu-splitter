@@ -12,10 +12,11 @@ https://github.com/cfxosu/osu-splitter/releases/tag/osu-splitter-1.0
 
 The application reads beatmap data directly from osu!'s memory while the game is running, making it highly responsive and accurate. You can split beatmaps into 2–100 parts based on hit object count. The tool also supports automatic difficulty naming and creates .osz archives for easy import.
 
-## Compatibility & Contact
+## Contact
 
-- Join the Discord server for questions: [discord.gg/bT7hySK2te](https://discord.gg/bT7hySK2te)  
-- If you like or want to support this project, subscribe to my YouTube channel: [http://www.youtube.com/@cfxosu](http://www.youtube.com/@cfxosu)
+- [Discord](https://discord.gg/bT7hySK2te)  
+- [osu!](https://osu.ppy.sh/users/15903077)
+- [YouTube](http://www.youtube.com/@cfxosu)
 
 ## Licenses
 
