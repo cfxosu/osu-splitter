@@ -1,6 +1,6 @@
 # osu-splitter
 
-A small tool that lets you split osu! beatmaps into multiple parts for practice. It supports all osu! game modes: std, mania, ctb, and taiko.
+A tool that lets you split osu! beatmaps into multiple parts for practice. It supports all osu! game modes: std, mania, ctb, and taiko.
 
 ![osu! Beatmap Splitter](screenshots/osu-splitter.png)
 
